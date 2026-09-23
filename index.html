@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>國中小必備英文單字練習</title>
+  <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- 頂部導覽列 -->
+    <header class="top-bar">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <span>單字練習</span>
+      </div>
+      <nav class="nav-buttons">
+        <button class="nav-btn active" data-view="home">首頁</button>
+      </nav>
+    </header>
+
+    <!-- ========== 首頁儀表板 ========== -->
+    <div class="view active" id="view-home">
+      
+      <div class="hero-card">
+        <h1 class="hero-title">國中小必備英文單字</h1>
+        <p class="hero-subtitle">共 2005 個單字，用多種方式反覆練習，牢牢記住！</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-label">總單字數</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="stat-known">0</div>
+            <div class="stat-label">已熟練</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="stat-unknown">0</div>
+            <div class="stat-label">待加強</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <h2 class="progress-title">學習進度</h2>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-detail">
+          <span id="progress-text">0 / 0 字（0%）</span>
+          <span>進度自動存在本瀏覽器</span>
+        </div>
+      </div>
+
+      <h2 class="letter-title" style="margin-bottom: 16px;">選擇練習模式</h2>
+      <div class="modes-grid">
+        <div class="mode-card" data-mode="flashcard">
+          <div class="mode-icon flashcard">📇</div>
+          <h3 class="mode-title">單字卡翻轉</h3>
+          <p class="mode-desc">看英文想中文，翻卡確認，標記熟練度</p>
+        </div>
+        <div class="mode-card" data-mode="quiz-en">
+          <div class="mode-icon quiz">📝</div>
+          <h3 class="mode-title">中選英測驗</h3>
+          <p class="mode-desc">看中文意思，選出正確的英文單字</p>
+        </div>
+        <div class="mode-card" data-mode="quiz-zh">
+          <div class="mode-icon quiz">🎯</div>
+          <h3 class="mode-title">英選中測驗</h3>
+          <p class="mode-desc">看英文單字，選出正確的中文意思</p>
+        </div>
+        <div class="mode-card" data-mode="spell">
+          <div class="mode-icon spell">⌨️</div>
+          <h3 class="mode-title">拼字練習</h3>
+          <p class="mode-desc">看中文意思，輸入正確的英文拼寫</p>
+        </div>
+        <div class="mode-card" data-mode="speak">
+          <div class="mode-icon speak">🗣️</div>
+          <h3 class="mode-title">跟讀發音</h3>
+          <p class="mode-desc">聽標準發音，跟讀練習正確唸法</p>
+        </div>
+      </div>
+
+      <div class="letter-section">
+        <h2 class="letter-title">選擇練習範圍（字母分類）</h2>
+        <div class="letter-grid" id="letter-grid"></div>
+      </div>
+
+    </div>
+
+    <!-- ========== 單字卡翻轉練習 ========== -->
+    <div class="view" id="view-flashcard">
+      <div class="card-progress" id="flashcard-progress">1 / 1</div>
+      
+      <div class="flashcard-area">
+        <div class="flashcard" id="flashcard">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div class="card-letter-badge" id="card-letter">A</div>
+              <div class="card-word" id="card-word-front">word</div>
+              <button class="speak-btn card-speak-btn" id="card-speak-btn" title="播放發音">🔊</button>
+              <div class="card-hint">點擊卡片翻轉</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="card-letter-badge" id="card-letter-back">A</div>
+              <div class="card-word" id="card-word-back">word</div>
+              <div class="card-meaning" id="card-meaning-back">meaning</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-controls" id="card-controls">
+          <button class="btn btn-unknown" id="btn-unknown">還不會</button>
+          <button class="btn btn-next" id="btn-next" style="display:none">下一張</button>
+          <button class="btn btn-known" id="btn-known">我會了</button>
+        </div>
+
+        <div id="flashcard-done" style="display:none; text-align:center;">
+          <h2 style="margin-bottom: 24px;">本輪練習完成！</h2>
+          <button class="btn btn-primary" id="btn-card-done">回到首頁</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 選擇題測驗 ========== -->
+    <div class="view" id="view-quiz">
+      <div class="quiz-area">
+        <div class="quiz-header">
+          <span class="quiz-progress-text" id="quiz-progress">1 / 10</span>
+          <span class="quiz-score-badge" id="quiz-score">得分：0</span>
+        </div>
+
+        <div id="quiz-active">
+          <div class="quiz-question-card">
+            <div class="quiz-label" id="quiz-question-label">這個單字的意思是？</div>
+            <div class="quiz-word-row">
+              <div class="quiz-word" id="quiz-question-word">word</div>
+              <button class="speak-btn" id="quiz-speak-btn" title="播放發音">🔊</button>
+            </div>
+            <div class="quiz-meaning" id="quiz-question-meaning" style="display:none;"></div>
+          </div>
+          <div class="quiz-options" id="quiz-options"></div>
+        </div>
+
+        <div class="quiz-result" id="quiz-result" style="display:none;">
+          <div class="result-emoji" id="result-emoji">🎉</div>
+          <h2 class="result-title" id="result-title">太棒了！</h2>
+          <div class="result-score" id="result-score">0 / 10</div>
+          <p class="result-detail" id="result-detail">正確率 0%</p>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-quiz-retry">再測一次</button>
+            <button class="btn btn-secondary" id="btn-quiz-home">回到首頁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 拼字練習 ========== -->
+    <div class="view" id="view-spell">
+      <div class="spell-area">
+        <div class="quiz-header">
+          <span class="quiz-progress-text" id="spell-progress">1 / 10</span>
+        </div>
+
+        <div id="spell-active">
+          <div class="spell-card">
+            <div class="quiz-label">根據中文意思，寫出英文單字</div>
+            <div class="spell-meaning" id="spell-meaning-text">意思</div>
+            <div class="spell-letter-hint" id="spell-letter-hint"></div>
+            <div class="spell-speak-row">
+              <button class="speak-btn" id="spell-speak-btn" title="播放發音">🔊 聽發音</button>
+            </div>
+            <input type="text" class="spell-input" id="spell-input" placeholder="輸入英文單字..." autocomplete="off">
+            <div class="spell-feedback" id="spell-feedback"></div>
+          </div>
+          <div class="spell-controls">
+            <button class="btn btn-primary" id="btn-spell-check">確認答案</button>
+            <button class="btn btn-secondary" id="btn-spell-skip" style="display:none">跳過</button>
+          </div>
+        </div>
+
+        <div class="quiz-result" id="spell-result" style="display:none;">
+          <div class="result-emoji" id="spell-result-emoji">🎉</div>
+          <h2 class="result-title" id="spell-result-title">拼字高手！</h2>
+          <div class="result-score" id="spell-result-score">0 / 10</div>
+          <p class="result-detail" id="spell-result-detail">正確率 0%</p>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-spell-retry">再練一次</button>
+            <button class="btn btn-secondary" id="btn-spell-home">回到首頁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 跟讀發音練習 ========== -->
+    <div class="view" id="view-speak">
+      <div class="spell-area">
+        <div class="quiz-header">
+          <span class="quiz-progress-text" id="speak-progress">1 / 10</span>
+        </div>
+
+        <div id="speak-active">
+          <div class="spell-card speak-card">
+            <div class="quiz-label">跟讀練習：聽發音，跟著唸出來</div>
+            <div class="speak-word" id="speak-word-text">apple</div>
+            <div class="speak-meaning" id="speak-meaning-text">蘋果</div>
+            
+            <div class="speak-main-btn-row">
+              <button class="btn btn-primary speak-main-btn" id="speak-play-btn">🔊 聽標準發音</button>
+            </div>
+            
+            <div class="speak-mic-row">
+              <button class="btn speak-mic-btn" id="speak-mic-btn">🎤 開始跟讀</button>
+            </div>
+            <div class="speak-mic-status" id="speak-mic-status">按麥克風按鈕，跟著單字大聲唸出來</div>
+          </div>
+          
+          <div class="card-controls" style="justify-content: center;">
+            <button class="btn btn-unknown" id="btn-speak-unknown">還不熟練</button>
+            <button class="btn btn-known" id="btn-speak-known">我會讀了</button>
+          </div>
+        </div>
+
+        <div class="quiz-result" id="speak-result" style="display:none;">
+          <div class="result-emoji">🎉</div>
+          <h2 class="result-title">跟讀練習完成！</h2>
+          <div class="result-score" id="speak-result-score">0 / 10</div>
+          <p class="result-detail" id="speak-result-detail">熟練度進度已更新</p>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-speak-retry">再練一次</button>
+            <button class="btn btn-secondary" id="btn-speak-home">回到首頁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      國中小必備 2000 單字練習 · 進度自動儲存於瀏覽器本機
+    </footer>
+  </div>
+
+  <script src="words-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
