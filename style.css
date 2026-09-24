@@ -433,6 +433,16 @@ body {
   font-family: inherit;
 }
 
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
 .btn-known {
   background: var(--success);
   color: white;

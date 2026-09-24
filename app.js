@@ -56,7 +56,7 @@ function startRecording() {
   }
   
   if (!window.isSecureContext) {
-    setMicStatus("❌ 不是安全環境，請用 http://localhost:8765 開啟", "error");
+    setMicStatus("❌ 不是安全環境，請用 http://localhost:8766 開啟", "error");
     return;
   }
   
@@ -120,8 +120,11 @@ function handleSpeechResult(transcript) {
   if (!word) return;
   
   const mainWord = getMainWord(word.word).toLowerCase();
-  // 比對：完全相同 或 包含主詞
-  const isCorrect = transcript === mainWord || transcript.includes(mainWord) || mainWord.includes(transcript);
+  // 比對規則：
+  // 1. 完全相同
+  // 2. 辨識結果包含完整主詞（辨識引擎可能夾帶雜訊字）
+  // 3. 主詞包含辨識結果，但要求至少 2 個字母，避免只唸 1 個字母就被誤判正確
+  const isCorrect = transcript === mainWord || transcript.includes(mainWord) || (transcript.length >= 2 && mainWord.includes(transcript));
   
   if (isCorrect) {
     setMicStatus("答對了！正確發音 🎉", "success");
@@ -324,6 +327,7 @@ function renderFlashcard() {
   const word = state.cardQueue[state.cardIndex];
   
   document.getElementById("card-letter").textContent = word.letter;
+  document.getElementById("card-letter-back").textContent = word.letter;
   document.getElementById("card-word-front").textContent = word.word;
   document.getElementById("card-word-back").textContent = word.word;
   document.getElementById("card-meaning-back").textContent = word.meaning;
@@ -524,9 +528,9 @@ function checkSpell() {
   
   if (!userAnswer) return;
   
-  // 取主詞比對（忽略括號別名）
+  // 取主詞比對（忽略括號別名），拼字練習採嚴格比對，避免子字串誤判
   const mainWord = getMainWord(word.word);
-  const isCorrect = userAnswer === correctAnswer || userAnswer === mainWord.toLowerCase() || userAnswer.includes(mainWord.toLowerCase());
+  const isCorrect = userAnswer === correctAnswer || userAnswer === mainWord.toLowerCase();
   
   input.disabled = true;
   
@@ -582,6 +586,13 @@ function renderSpeak() {
   document.getElementById("speak-progress").textContent = `${state.speakIndex + 1} / ${total}`;
   document.getElementById("speak-word-text").textContent = word.word;
   document.getElementById("speak-meaning-text").textContent = word.meaning;
+  // 重置跟讀狀態提示
+  setMicStatus("按「🎤 開始跟讀」，跟著單字大聲唸出來", "");
+  const micBtn = document.getElementById("speak-mic-btn");
+  if (micBtn) {
+    micBtn.classList.remove("recording");
+    micBtn.textContent = "🎤 開始跟讀";
+  }
 }
 
 function markSpeak(known) {
@@ -693,9 +704,6 @@ function bindEvents() {
   
   // 單字卡完成按鈕
   document.getElementById("btn-card-done").addEventListener("click", () => { renderHome(); switchView("home"); });
-  
-  // 首頁模式導覽按鈕
-  document.getElementById("btn-start-flashcard").addEventListener("click", startFlashcard);
 }
 
 // 啟動
